@@ -3,6 +3,7 @@ using Iot.Device.CpuTemperature;
 using System;
 using System.Threading;
 using System.Device.Pwm;
+using System.Threading.Tasks;
 
 namespace ConsoleAppPi
 {
@@ -23,24 +24,27 @@ namespace ConsoleAppPi
         static void WritePulseWidth(PwmChannel pwmChannel, ServoMotor servoMotor)
         {
             servoMotor.Start();
-
+            int pulseWidthValue = 1000;
             while (true)
             {
-                Console.WriteLine("Enter a pulse width in microseconds ('Q' to quit). ");
-                string? pulseWidth = Console.ReadLine();
 
-                if (pulseWidth?.ToUpper() is "Q" || pulseWidth?.ToUpper() is null)
-                {
-                    break;
-                }
+                //Console.WriteLine("Enter a pulse width in microseconds ('Q' to quit). ");
+                //string? pulseWidth = Console.ReadLine();
 
-                if (!int.TryParse(pulseWidth, out int pulseWidthValue))
-                {
-                    Console.WriteLine($"Can not parse {pulseWidth}.  Try again.");
-                }
+                //if (pulseWidth?.ToUpper() is "Q" || pulseWidth?.ToUpper() is null)
+                //{
+                //    break;
+                //}
+
+                //if (!int.TryParse(pulseWidth, out int pulseWidthValue))
+                //{
+                //    Console.WriteLine($"Can not parse {pulseWidth}.  Try again.");
+                //}               
 
                 servoMotor.WritePulseWidth(pulseWidthValue);
                 Console.WriteLine($"Duty Cycle: {pwmChannel.DutyCycle * 100.0}%");
+                pulseWidthValue = (pulseWidthValue == 1000) ? 2000 : 1000;
+                Thread.Sleep(5000);
             }
 
             servoMotor.Stop();
